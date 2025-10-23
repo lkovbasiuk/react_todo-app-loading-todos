@@ -153,31 +153,9 @@ export const App: React.FC = () => {
                 </div>
               ))}
 
-            {/* This todo is being edited */}
-            <div data-cy="Todo" className="todo">
-              <label className="todo__status-label">
-                <input
-                  data-cy="TodoStatus"
-                  type="checkbox"
-                  className="todo__status"
-                />
-              </label>
-
-              {/* This form is shown instead of the title and remove button */}
-              <form>
-                <input
-                  data-cy="TodoTitleField"
-                  type="text"
-                  className="todo__title-field"
-                  placeholder="Empty todo will be deleted"
-                  value="Todo is being edited now"
-                />
-              </form>
-
-              <div data-cy="TodoLoader" className="modal overlay">
-                <div className="modal-background has-background-white-ter" />
-                <div className="loader" />
-              </div>
+            <div data-cy="TodoLoader" className="modal overlay">
+              <div className="modal-background has-background-white-ter" />
+              <div className="loader" />
             </div>
 
             {/* This todo is in loading state */}
@@ -216,7 +194,7 @@ export const App: React.FC = () => {
         {todos.length > 0 && (
           <footer className="todoapp__footer" data-cy="Footer">
             <span className="todo-count" data-cy="TodosCounter">
-              {`${todos.length} items left`}
+              {`${todos.filter(todo => !todo.completed).length} items left`}
             </span>
 
             {/* Active link should have the 'selected' class */}
@@ -267,28 +245,23 @@ export const App: React.FC = () => {
 
       {/* DON'T use conditional rendering to hide the notification */}
       {/* Add the 'hidden' class to hide the message smoothly */}
-      {error && (
-        <div
-          data-cy="ErrorNotification"
-          className="notification is-danger is-light has-text-weight-normal"
-        >
-          <button
-            data-cy="HideErrorButton"
-            type="button"
-            className="delete hidden"
-          />
-          {/* show only one message at a time */}
-          {error}
-          <br />
-          Title should not be empty
-          <br />
-          Unable to add a todo
-          <br />
-          Unable to delete a todo
-          <br />
-          Unable to update a todo
-        </div>
-      )}
+
+      <div
+        data-cy="ErrorNotification"
+        className={cn(
+          'notification is-danger is-light has-text-weight-normal',
+          { hidden: !error },
+        )}
+      >
+        <button
+          data-cy="HideErrorButton"
+          type="button"
+          className="delete"
+          onClick={() => setError(null)}
+        />
+        {/* show only one message at a time */}
+        {error}
+      </div>
     </div>
   );
 };
